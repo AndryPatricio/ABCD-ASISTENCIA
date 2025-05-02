@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Empleado {
+  id_empleado       Int          @id @default(autoincrement())
+  nombre            String
+  id_departamento   Int
+  contrasena        String
+  id_rol            Int
+  fecha_eliminacion DateTime?
+  Departamento      Departamento @relation(fields: [id_departamento], references: [id_departamento])
+  Rol               Rol          @relation(fields: [id_rol], references: [id_rol])
+  TurnoCompleto     TurnoCompleto[]
+  Horario           Horario[]
+  AdvertenciaSent   Advertencia[] @relation("EmpleadoRemitente")
+  AdvertenciaRecv   Advertencia[] @relation("EmpleadoDestinatario")
+  EventoAsistencia  EventoAsistencia[]
+}
+
+model Departamento {
+  id_departamento Int         @id @default(autoincrement())
+  nombre          String
+  descripcion     String?
+  fecha_registro  DateTime    @default(now())
+  Empleado        Empleado[]
+}
+
+model TurnoCompleto {
+  id_turno             Int       @id @default(autoincrement())
+  id_empleado          Int
+  fecha_inicio         DateTime
+  fecha_fin            DateTime?
+  tiempo_total_minutos Int
+  tiempo_comida_minutos Int
+  minutos_retardo      Int
+  Empleado             Empleado  @relation(fields: [id_empleado], references: [id_empleado])
+}
+
+model Rol {
+  id_rol   Int       @id @default(autoincrement())
+  nombre   String
+  Empleado Empleado[]
+}
+
+model Advertencia {
+  id_advertencia          Int       @id @default(autoincrement())
+  id_empleado_remitente   Int
+  id_empleado_destinatario Int
+  asunto                  String?
+  mensaje                 String?
+  fecha                   DateTime?
+  leido                   Boolean   @default(false)
+  EmpleadoRemitente       Empleado  @relation("EmpleadoRemitente", fields: [id_empleado_remitente], references: [id_empleado], onUpdate: NoAction, onDelete: NoAction)
+  EmpleadoDestinatario    Empleado  @relation("EmpleadoDestinatario", fields: [id_empleado_destinatario], references: [id_empleado], onUpdate: NoAction, onDelete: NoAction)
+}
+
+model Dia {
+  id_dia Int     @id @default(autoincrement())
+  nombre String
+  Horario Horario[]
+}
+
+model Horario {
+  id_horario            Int      @id @default(autoincrement())
+  id_empleado           Int?
+  id_dia                Int
+  hora_entrada_estandar DateTime @db.Time
+  hora_salida_estandar  DateTime @db.Time
+  laborable             Boolean
+  Empleado              Empleado? @relation(fields: [id_empleado], references: [id_empleado])
+  Dia                   Dia       @relation(fields: [id_dia], references: [id_dia])
+}
+
+model EventoAsistencia {
+  id_evento     Int       @id @default(autoincrement())
+  id_empleado   Int
+  fecha_hora    DateTime  @default(now())
+  tipo_evento   Int
+  Empleado      Empleado  @relation(fields: [id_empleado], references: [id_empleado])
+  TiposEventos  TiposEventos @relation(fields: [tipo_evento], references: [id])
+}
+
+model TiposEventos {
+  id     Int               @id @default(autoincrement())
+  nombre String
+  EventoAsistencia EventoAsistencia[]
+}
