@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 
+interface EmpleadoData {
+	nombre: string;
+	idDepartamento: number;
+	contrasena: string;
+	idRol: number;
+}
+
 @Injectable()
 export class EmpleadoService {
 	constructor(private prisma: PrismaService) {}
@@ -9,12 +16,7 @@ export class EmpleadoService {
 		return this.prisma.empleado.findMany();
 	}
 
-	async createEmpleado(empleadoData: {
-		nombre: string;
-		idDepartamento: number;
-		contrasena: string;
-		idRol: number;
-	}) {
+	async createEmpleado(empleadoData: EmpleadoData) {
 		return this.prisma.empleado.create({
 			data: {
 				nombre: empleadoData.nombre,
