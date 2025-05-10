@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { DepartamentoService } from './departamento.service';
+import { DepartamentoData } from './dto/departamentos.dto';
 
 @Controller('departamentos')
 export class DepartamentoController {
@@ -11,10 +12,7 @@ export class DepartamentoController {
     }
 
     @Post('/createDepartamento')
-    createDepartamento(@Body() departamentoData: {
-        nombre: string;
-        idDepartamento: number;
-    }) {
+    createDepartamento(@Body() departamentoData: DepartamentoData ) {
         return this.departamentosService.createDepartamento(departamentoData);
     }
 }
