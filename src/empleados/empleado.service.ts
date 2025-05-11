@@ -1,12 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-
-interface EmpleadoData {
-	nombre: string;
-	idDepartamento: number;
-	contrasena: string;
-	idRol: number;
-}
+import { EmpleadoData } from './dto/empleados.dto';
 
 @Injectable()
 export class EmpleadoService {

@@ -1,13 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { EmpleadoService } from './empleado.service';
+import { EmpleadoData } from './dto/empleados.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-
-interface EmpleadoData {
-	nombre: string;
-	idDepartamento: number;
-	contrasena: string;
-	idRol: number;
-}
 
 @Controller('empleados')
 export class EmpleadoController {
