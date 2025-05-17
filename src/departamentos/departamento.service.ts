@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { DepartamentoData } from './dto/departamentos.dto';
+import { DepartamentoDto } from './dto/departamentos.dto';
 
 @Injectable()
 export class DepartamentoService {
@@ -10,7 +10,7 @@ export class DepartamentoService {
         return this.prisma.departamento.findMany();
     }
 
-    async createDepartamento(departamentoData: DepartamentoData) {
+    async createDepartamento(departamentoData: DepartamentoDto) {
         return this.prisma.departamento.create({
             data: {
                 nombre: departamentoData.nombre,

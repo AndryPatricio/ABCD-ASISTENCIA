@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { DepartamentoService } from './departamento.service';
-import { DepartamentoData } from './dto/departamentos.dto';
+import { DepartamentoDto } from './dto/departamentos.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('departamentos')
@@ -20,7 +20,7 @@ export class DepartamentoController {
     @ApiResponse({ status: 201, description: 'Departamento creado exitosamente.' })
     @ApiResponse({ status: 400, description: 'Error al crear el departamento. Datos inválidos.' })
     @ApiResponse({ status: 500, description: 'Error al crear el departamento. Parámetros inválidos.' })
-    createDepartamento(@Body() departamentoData: DepartamentoData) {
+    createDepartamento(@Body() departamentoData: DepartamentoDto) {
         return this.departamentosService.createDepartamento(departamentoData);
     }
 }
