@@ -11,6 +11,7 @@ async function bootstrap() {
     .setTitle('ABCD Asistencia API')
     .setDescription('API para la aplicación web de ABCD Asistencia')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
