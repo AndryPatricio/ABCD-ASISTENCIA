@@ -1,8 +1,10 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { EmpleadoService } from './empleado.service';
-import { EmpleadoDto, LoginEmpleadoDto, LoginEmpleadoResponseDto } from './dto/empleados.dto';
+import { EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
+// import { LoginResponseDto } from 'src/responses/response.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
+import { LoginResponseDto } from 'src/responses/response.dto';
 
 @Controller('empleados')
 export class EmpleadoController {
@@ -19,13 +21,13 @@ export class EmpleadoController {
 
 	@Post('/login')
 	@ApiOperation({ summary: 'Inicia sesión', description: 'Inicia sesión con el nombre de usuario y contraseña.' })
-	@ApiResponse({ status: 200, description: 'Inicio de sesión exitoso.', type: LoginEmpleadoResponseDto })
+	@ApiResponse({ status: 200, description: 'Inicio de sesión exitoso.', type: LoginResponseDto })
 	@ApiResponse({ status: 401, description: 'Error de autenticación. Usuario o contraseña incorrectos.', schema: { example: { message: 'Error de autenticación. Usuario o contraseña incorrectos.' } } })
 	@ApiResponse({ status: 500, description: 'Error al iniciar sesión. Parámetros inválidos.' })
 	login(@Body() loginData: LoginEmpleadoDto, @Res() response: Response) {
 		return this.empleadosService.login(loginData, response);
 	}
-	
+
 
 	@Post('/createEmpleado')
 	@ApiOperation({ summary: 'Crea un nuevo empleado', description: 'Crea un nuevo empleado en la base de datos.' })
