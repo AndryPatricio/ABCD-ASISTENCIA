@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 import { Response } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class EmpleadoService {
@@ -22,25 +23,29 @@ export class EmpleadoService {
 			},
 		});
 		
-		if (!empleado) {
+		if (empleado === null) {
 			return response.status(401).json({
 				message: 'Error de autenticación. Usuario o contraseña incorrectos.',
 			});
 		}
 
-		console.log({ empleado })
+		const jwtToken = process.env.JWT_SECRET as string;
+
+		const payload = {
+			id_empleado: empleado.id_empleado,
+			nombre: empleado.nombre,
+			id_departamento: empleado.id_departamento,
+			id_rol: empleado.id_rol,
+		}
+
+		const token = jwt.sign(payload, jwtToken)
 
 		return response.status(200).json({
 			message: 'Inicio de sesión exitoso.',
-			empleado: {
-				id_empleado: empleado.id_empleado,
-				nombre: empleado.nombre,
-				id_departamento: empleado.id_departamento,
-				id_rol: empleado.id_rol,
+			data: {
+				token: token,
 			},
-		});
-		
-		// return empleado;
+		});	
 	}
 
 	async createEmpleado(empleadoData: EmpleadoDto) {

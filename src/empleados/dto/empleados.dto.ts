@@ -21,15 +21,3 @@ export class LoginEmpleadoDto {
 	@ApiProperty({ description: 'Contraseña', example: 'ABC123*' })
 	contrasena: string;
 }
-
-export class LoginEmpleadoResponseDto {
-	@ApiProperty({ description: 'Mensaje de respuesta', example: 'Inicio de sesión exitoso.' })
-  message: string;
-	@ApiProperty({ description: 'Empleado', example: { id_empleado: 1, nombre: 'Juan Ignacio Perez Gomez', id_departamento: 1, id_rol: 1 } })
-  empleado?: {
-    id_empleado: number;
-    nombre: string;
-    id_departamento: number;
-    id_rol: number;
-  };
-}
