@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { EmpleadoService } from './empleado.service';
-import { ActualizarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
+import { ActualizarEmpleadoDto, EliminarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 // import { LoginResponseDto } from 'src/responses/response.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -45,5 +45,14 @@ export class EmpleadoController {
 	@ApiResponse({ status: 500, description: 'Error al actualizar el empleado. Parámetros inválidos.' })
 	updateEmpleado(@Body() empleadoData: ActualizarEmpleadoDto, @Res() response: Response) {
 		return this.empleadosService.updateEmpleado(empleadoData, response);
+	}
+
+	@Post('/deleteEmpleado')
+	@ApiOperation({ summary: 'Elimina un empleado', description: 'Elimina un empleado de la base de datos.' })
+	@ApiResponse({ status: 200, description: 'Empleado eliminado exitosamente.', type: EliminarEmpleadoDto })
+	@ApiResponse({ status: 400, description: 'Error al eliminar el empleado. Datos inválidos.', schema: { example: { message: 'Error al eliminar el empleado. Datos inválidos.' } } })
+	@ApiResponse({ status: 500, description: 'Error al eliminar el empleado. Parámetros inválidos.' })
+	deleteEmpleado(@Body() empleadoData: EliminarEmpleadoDto, @Res() response: Response) {
+		return this.empleadosService.deleteEmpleado(empleadoData, response);
 	}
 }

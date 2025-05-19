@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { ActualizarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
+import { ActualizarEmpleadoDto, EliminarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 import { Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
@@ -191,6 +191,22 @@ export class EmpleadoService {
 		
 		return response.status(200).json({
 			message: 'Empleado actualizado exitosamente.',
+			data: empleado,
+		});
+	}
+
+	async deleteEmpleado(empleadoData: EliminarEmpleadoDto, response: Response) {
+		const empleado = await this.prisma.empleado.update({
+			where: {
+				id_empleado: empleadoData.idEmpleado,
+			},
+			data: {
+				fecha_eliminacion: new Date(),
+			},
+		});
+
+		return response.status(200).json({
+			message: 'Empleado eliminado exitosamente.',
 			data: empleado,
 		});
 	}

@@ -76,3 +76,8 @@ export class ActualizarEmpleadoDto {
 	} })
 	diasLaborales: DiasLaborales;
 }
+
+export class EliminarEmpleadoDto {
+	@ApiProperty({ description: 'Id del empleado', example: 1 })
+	idEmpleado: number;
+}
