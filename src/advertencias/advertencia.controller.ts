@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AdvertenciaService } from './advertencia.service';
 import { AdvertenciaDto } from './dto/advertencias.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
