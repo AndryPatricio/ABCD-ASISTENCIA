@@ -48,14 +48,95 @@ export class EmpleadoService {
 		});	
 	}
 
-	async createEmpleado(empleadoData: EmpleadoDto) {
-		return this.prisma.empleado.create({
-			data: {
-				nombre: empleadoData.nombre,
-				id_departamento: empleadoData.idDepartamento,
-				contrasena: empleadoData.contrasena,
-				id_rol: empleadoData.idRol,
-			},
-		});
+	async createEmpleado(empleadoData: EmpleadoDto, response: Response) {
+		try {
+			const empleado = await this.prisma.empleado.create({
+				data: {
+					nombre: empleadoData.nombre,
+					id_departamento: empleadoData.idDepartamento,
+					contrasena: empleadoData.contrasena,
+					id_rol: empleadoData.idRol,
+				},
+			});
+
+			const dias = await this.prisma.dia.findMany();
+
+			await this.prisma.horario.createMany({
+				data: [
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[0].id_dia,
+						laborable: empleadoData.diasLaborales.lunes.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.lunes.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.lunes.hora_salida),
+					},
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[1].id_dia,
+						laborable: empleadoData.diasLaborales.martes.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.martes.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.martes.hora_salida),
+					},
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[2].id_dia,
+						laborable: empleadoData.diasLaborales.miercoles.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.miercoles.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.miercoles.hora_salida),
+					},
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[3].id_dia,
+						laborable: empleadoData.diasLaborales.jueves.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.jueves.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.jueves.hora_salida),
+					},
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[4].id_dia,
+						laborable: empleadoData.diasLaborales.viernes.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.viernes.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.viernes.hora_salida),
+					},
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[5].id_dia,
+						laborable: empleadoData.diasLaborales.sabado.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.sabado.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.sabado.hora_salida),
+					},
+					{
+						id_empleado: empleado.id_empleado,
+						id_dia: dias[6].id_dia,
+						laborable: empleadoData.diasLaborales.domingo.laborable,
+						hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales.domingo.hora_entrada),
+						hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales.domingo.hora_salida),
+					}
+				]
+			})
+
+			return response.status(201).json({
+				message: 'Empleado creado exitosamente.',
+				data: empleado,
+			});
+		} catch (error) {
+			console.log(error);
+			return response.status(500).json({
+				message: 'Error al crear el empleado. Parámetros inválidos.',
+			});
+		}
+	}
+
+	obtenerHoras = (hora: string) => {
+		let [horas, minutos] = hora.split(':').map(Number);
+
+		if (isNaN(horas) || isNaN(minutos)) {
+			horas = 0;
+			minutos = 0;
+		}
+
+		const soloHora = new Date(Date.UTC(1970, 0, 1, horas, minutos));
+
+		return soloHora;
 	}
 }

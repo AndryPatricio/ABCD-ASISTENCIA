@@ -31,10 +31,10 @@ export class EmpleadoController {
 
 	@Post('/createEmpleado')
 	@ApiOperation({ summary: 'Crea un nuevo empleado', description: 'Crea un nuevo empleado en la base de datos.' })
-	@ApiResponse({ status: 201, description: 'Empleado creado exitosamente.' })
-	@ApiResponse({ status: 400, description: 'Error al crear el empleado. Datos inválidos.' })
+	@ApiResponse({ status: 201, description: 'Empleado creado exitosamente.', type: EmpleadoDto })
+	@ApiResponse({ status: 400, description: 'Error al crear el empleado. Datos inválidos.', schema: { example: { message: 'Error al crear el empleado. Datos inválidos.' } } })
 	@ApiResponse({ status: 500, description: 'Error al crear el empleado. Parámetros inválidos.' })
-	createEmpleado(@Body() empleadoData: EmpleadoDto ) {
-		return this.empleadosService.createEmpleado(empleadoData);
+	createEmpleado(@Body() empleadoData: EmpleadoDto, @Res() response: Response ) {
+		return this.empleadosService.createEmpleado(empleadoData, response);
 	}
 }
