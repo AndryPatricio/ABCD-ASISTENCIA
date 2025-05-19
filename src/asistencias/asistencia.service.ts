@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { AsistenciaDto, MarcarEventoAsistenciaDto } from './dto/asistencias.dto';
+import { ActualizarAsistenciaDto, AsistenciaDto, MarcarEventoAsistenciaDto } from './dto/asistencias.dto';
 
 @Injectable()
 export class AsistenciaService {
@@ -62,6 +62,9 @@ export class AsistenciaService {
                     gte: new Date(date.setHours(0, 0, 0, 0)),
                     lte: new Date(date.setHours(23, 59, 59, 999)),
                 },
+                tipo_evento: {
+                    in: [1, 2, 3, 4],
+                },
                 Empleado: {
                     fecha_eliminacion: null,
                 },
@@ -90,6 +93,54 @@ export class AsistenciaService {
         });
 
         return resultado;
+    }
+
+    async eliminarAsistencia(idEventoAsistencia: number) {
+        const asistencia = await this.prisma.eventoAsistencia.findUnique({
+            where: { id_evento: +idEventoAsistencia },
+        });
+
+        if (!asistencia) {
+            throw new Error('Asistencia no encontrada');
+        }
+
+        await this.prisma.eventoAsistencia.update({
+            where: { id_evento: +idEventoAsistencia },
+            data: {
+                tipo_evento: 5,
+            },
+        })
+        return asistencia;
+    }
+
+    async updateAsistencia(asistenciaData: ActualizarAsistenciaDto) {
+        const { idEventoAsistencia, fechaHora } = asistenciaData;
+        
+        if (!idEventoAsistencia || !fechaHora) {
+            throw new Error('Faltan datos para actualizar la asistencia');
+        }
+
+        const asistencia = await this.prisma.eventoAsistencia.findUnique({
+            where: { id_evento: +idEventoAsistencia },
+        });
+
+        if (!asistencia) {
+            throw new Error('Asistencia no encontrada');
+        }
+
+        // Resta 6 horas
+        const nuevaFechaHora = new Date(fechaHora);
+        nuevaFechaHora.setHours(nuevaFechaHora.getHours() - 6);
+
+        // Obtiene la hora actual de la asistencia obtenida, y cambia la hora de entrada según el parámetro        
+        const updatedAsistencia = await this.prisma.eventoAsistencia.update({
+            where: { id_evento: +idEventoAsistencia },
+            data: {
+                fecha_hora: new Date(nuevaFechaHora),
+            },
+        });
+
+        return updatedAsistencia;
     }
 
     async obtenerUltimaAsistenciaPorIdEmpleado(idEmpleado: number) {

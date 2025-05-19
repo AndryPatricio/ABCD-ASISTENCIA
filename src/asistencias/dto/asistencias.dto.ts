@@ -9,3 +9,11 @@ export class MarcarEventoAsistenciaDto {
     @ApiProperty({ description: 'ID del empleado', example: 1 })
     idEmpleado: number;
 }
+
+export class ActualizarAsistenciaDto {
+    @ApiProperty({ description: 'ID del evento de asistencia', example: 1 })
+    idEventoAsistencia: number;
+
+    @ApiProperty({ description: 'Hora de entrada', example: '2023-10-01T08:00:00Z' })
+    fechaHora: Date;
+}
