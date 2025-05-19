@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 import { Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EmpleadoService {
@@ -49,12 +50,15 @@ export class EmpleadoService {
 	}
 
 	async createEmpleado(empleadoData: EmpleadoDto, response: Response) {
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(empleadoData.contrasena, saltRounds);
+
 		try {
 			const empleado = await this.prisma.empleado.create({
 				data: {
 					nombre: empleadoData.nombre,
 					id_departamento: empleadoData.idDepartamento,
-					contrasena: empleadoData.contrasena,
+					contrasena: hashedPassword,
 					id_rol: empleadoData.idRol,
 				},
 			});
