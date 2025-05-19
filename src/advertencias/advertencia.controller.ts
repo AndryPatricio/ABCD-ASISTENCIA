@@ -7,11 +7,11 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class AdvertenciaController {
     constructor(private readonly advertenciasService: AdvertenciaService) {}
 
-    @Get()
+    @Get('advertenciasByEmpleado')
     @ApiOperation({ summary: 'Obtiene todos las advertencias del empleado', description: 'Obtiene todas las advertencias del empleado de la base de datos.' })
     @ApiResponse({ status: 200, description: 'Lista de advertencias obtenida exitosamente.' })
     @ApiResponse({ status: 500, description: 'Error al obtener la lista de advertencias.' })
-    getAdvertencias(@Query() empleadoData: AdvertenciaDto) {
-        return this.advertenciasService.getAdvertencias(empleadoData);
+    getAdvertenciasByEmpleado(@Query() empleadoData: AdvertenciaDto) {
+        return this.advertenciasService.getAdvertenciasByEmpleado(empleadoData);
     }
 }

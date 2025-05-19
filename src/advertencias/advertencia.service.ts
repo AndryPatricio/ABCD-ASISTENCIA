@@ -7,11 +7,19 @@ import { AdvertenciaDto } from './dto/advertencias.dto';
 export class AdvertenciaService {
     constructor(private prisma: PrismaService) {}
 
-    async getAdvertencias(empleadoData: AdvertenciaDto) {
-        const advertencias = this.prisma.advertencia.findMany({
+    async getAdvertenciasByEmpleado(empleadoData: AdvertenciaDto) {
+        let idEmpleado = +empleadoData.id_empleado_destinatario;
+
+        if( isNaN(idEmpleado) ) {
+            idEmpleado = 0;
+        }
+
+        const advertencias = await this.prisma.advertencia.findMany({
             where: {
-                id_empleado_destinatario: empleadoData.id_empleado_destinatario,
+                id_empleado_destinatario: idEmpleado,
             }
         });
+
+        return advertencias;
     }
 }
