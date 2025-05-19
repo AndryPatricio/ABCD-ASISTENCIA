@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
+import { ActualizarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 import { Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
@@ -142,5 +142,56 @@ export class EmpleadoService {
 		const soloHora = new Date(Date.UTC(1970, 0, 1, horas, minutos));
 
 		return soloHora;
+	}
+
+	async updateEmpleado(empleadoData: ActualizarEmpleadoDto, response: Response) {
+		const empleado = await this.prisma.empleado.update({
+			where: {
+				id_empleado: empleadoData.idEmpleado,
+			},
+			data: {
+				nombre: empleadoData.nombre,
+				id_departamento: empleadoData.idDepartamento,
+				id_rol: empleadoData.idRol,
+			},
+			include: {
+				Horario: true,
+			}
+		});
+
+		const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+
+		empleado.Horario.forEach(async (horario, index) => {
+			await this.prisma.horario.update({
+				where: {
+					id_horario: horario.id_horario,
+				},
+				data: {
+					laborable: empleadoData.diasLaborales[dias[index]].laborable,
+					hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[index]].hora_entrada),
+					hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[index]].hora_salida),
+				}
+			})
+		})
+
+		if (empleadoData.contrasena) {
+			const saltRounds = 10;
+			const hashedPassword = await bcrypt.hash(empleadoData.contrasena, saltRounds);
+
+			await this.prisma.empleado.update({
+				where: {
+					id_empleado: empleadoData.idEmpleado,
+				},
+				data: {
+					contrasena: hashedPassword,
+				},
+			});
+		}
+		
+		
+		return response.status(200).json({
+			message: 'Empleado actualizado exitosamente.',
+			data: empleado,
+		});
 	}
 }

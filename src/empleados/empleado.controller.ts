@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { EmpleadoService } from './empleado.service';
-import { EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
+import { ActualizarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 // import { LoginResponseDto } from 'src/responses/response.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -36,5 +36,14 @@ export class EmpleadoController {
 	@ApiResponse({ status: 500, description: 'Error al crear el empleado. Parámetros inválidos.' })
 	createEmpleado(@Body() empleadoData: EmpleadoDto, @Res() response: Response ) {
 		return this.empleadosService.createEmpleado(empleadoData, response);
+	}
+
+	@Post('/updateEmpleado')
+	@ApiOperation({ summary: 'Actualiza un empleado', description: 'Actualiza un empleado en la base de datos.' })
+	@ApiResponse({ status: 200, description: 'Empleado actualizado exitosamente.', type: EmpleadoDto })
+	@ApiResponse({ status: 400, description: 'Error al actualizar el empleado. Datos inválidos.', schema: { example: { message: 'Error al actualizar el empleado. Datos inválidos.' } } })
+	@ApiResponse({ status: 500, description: 'Error al actualizar el empleado. Parámetros inválidos.' })
+	updateEmpleado(@Body() empleadoData: ActualizarEmpleadoDto, @Res() response: Response) {
+		return this.empleadosService.updateEmpleado(empleadoData, response);
 	}
 }
