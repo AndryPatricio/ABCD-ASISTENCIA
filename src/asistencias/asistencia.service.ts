@@ -23,8 +23,6 @@ export class AsistenciaService {
 
         tipoEvento = ultimaAsistencia ? ultimaAsistencia.tipo_evento + 1 : 1;
 
-        console.log({ ultimaAsistencia, tipoEvento })
-
         if(tipoEvento > 4) tipoEvento = 1;
 
         const date = new Date();
@@ -37,6 +35,44 @@ export class AsistenciaService {
                 tipo_evento: tipoEvento,
             },
         });
+
+        if(tipoEvento === 4) {
+            const asistenciasTurno = await this.prisma.eventoAsistencia.findMany({
+                where: { id_empleado: asistenciaData.idEmpleado, },
+                orderBy: { fecha_hora: 'desc' },
+                take: 4,
+            });
+
+            asistenciasTurno.reverse();
+
+            const fechaInicioTurno = new Date(asistenciasTurno[0].fecha_hora);
+            const fechaInicioComida = new Date(asistenciasTurno[1].fecha_hora);
+            const fechaFinComida = new Date(asistenciasTurno[2].fecha_hora);
+            const fechaFinTurno = new Date(asistenciasTurno[3].fecha_hora);
+            const horaEntradaEstandar = horario.hora_entrada_estandar;
+
+            const tiempoTotalMinutos = Math.floor((fechaFinTurno.getTime() - fechaInicioTurno.getTime()) / (1000 * 60));
+            const tiempoComidaMinutos = Math.floor((fechaFinComida.getTime() - fechaInicioComida.getTime()) / (1000 * 60));
+            const tiempoExtraComida = tiempoComidaMinutos - 60 > 0 ? tiempoComidaMinutos - 60 : 0;
+
+            // Calcula la diferencia entre fechaInicioTurno y horaEntradaEstandar
+            let minutosRetardo = Math.floor((fechaInicioTurno.getTime() - horaEntradaEstandar.getTime()) / (1000 * 60));
+            if (minutosRetardo < 0) minutosRetardo = 0;
+            minutosRetardo += tiempoExtraComida;
+
+            const turnoCompleto = await this.prisma.turnoCompleto.create({
+                data: {
+                    id_empleado: asistenciaData.idEmpleado,
+                    fecha_inicio: fechaInicioTurno,
+                    fecha_fin: fechaFinTurno,
+                    tiempo_total_minutos: tiempoTotalMinutos,
+                    tiempo_comida_minutos: tiempoComidaMinutos,
+                    minutos_retardo: minutosRetardo,
+                },
+            });
+
+            console.log({ turnoCompleto, asistenciasTurno, fechaInicioTurno, fechaInicioComida, fechaFinComida, fechaFinTurno, tiempoTotalMinutos, tiempoComidaMinutos, tiempoExtraComida }); 
+        }
 
         return asistencia;
     }

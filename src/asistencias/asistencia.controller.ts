@@ -39,7 +39,6 @@ export class AsistenciaController {
         return this.asistenciasService.eliminarAsistencia(id);
     }
 
-    // Update asistencia
     @Post('actualizar-asistencia')
     @ApiOperation({ summary: 'Actualiza una asistencia', description: 'Actualiza una asistencia en la base de datos.' })
     @ApiResponse({ status: 200, description: 'Asistencia actualizada exitosamente.' })
