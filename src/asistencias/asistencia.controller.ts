@@ -47,4 +47,20 @@ export class AsistenciaController {
         return this.asistenciasService.updateAsistencia(asistenciaData);
     }
 
+    @Get('obtener-historial-asistencias')
+    @ApiOperation({ summary: 'Obtiene el historial de asistencias', description: 'Obtiene el historial de asistencias de la base de datos.' })
+    @ApiResponse({ status: 200, description: 'Historial de asistencias obtenido exitosamente.' })
+    @ApiResponse({ status: 500, description: 'Error al obtener el historial de asistencias.' })
+    obtenerHistorialAsistencias() {
+        return this.asistenciasService.getHistorialAsistencias();
+    }
+
+
+    @Get('obtener-asistencias-empleado')
+    @ApiOperation({ summary: 'Obtiene las asistencias de un empleado', description: 'Obtiene las asistencias de un empleado en la base de datos.' })
+    @ApiResponse({ status: 200, description: 'Asistencias del empleado obtenidas exitosamente.' })
+    @ApiResponse({ status: 500, description: 'Error al obtener las asistencias del empleado.' })
+    obtenerAsistenciasEmpleado(@Query('id') id: number) {
+        return this.asistenciasService.getHistorialAsistenciasPorIdEmpleado(id);
+    }
 }
