@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { DepartamentoDto } from "src/departamentos/dto/departamentos.dto";
 
 export class AsistenciaDto {
     @ApiProperty({  description: 'Nombre de la asistencia', example: 'Asistencia 1',  })
@@ -26,4 +27,25 @@ export class TurnoCompletoDto {
     tiempoTotalMinutos: number;
     tiempoComidaMinutos: number;
     minutosRetardo: number;
+}
+
+export class TurnoCompletoDtoResponse {
+    idEmpleado: number;
+    nombreEmpleado: string;
+    minutosRetardo: number;
+    cantidadRetardos: number;
+    cantidadFaltas: number;
+    cantidadSalidasTemprano: number;
+    asistenciasTotales: number;
+    horasTrabajadas: number;
+}
+
+export class TurnoCompletoEmpleadoDtoResponse {
+    idTurnoCompleto: number;
+    idEmpleado:number;
+    dia: Date
+    horaEntrada: Date;
+    horaSalida: Date;
+    minutosTrabajados: number;
+    departamento: DepartamentoDto;
 }
