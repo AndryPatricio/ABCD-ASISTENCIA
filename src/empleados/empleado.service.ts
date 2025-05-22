@@ -39,6 +39,11 @@ export class EmpleadoService {
 			},
 		});
 
+		console.log({
+			empleadoData,
+			empleado,
+		})
+
 		const comparePassword = await bcrypt.compare(empleadoData.contrasena, empleado?.contrasena || '');
 
 		if(!comparePassword) {
