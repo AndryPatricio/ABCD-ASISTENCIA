@@ -10,7 +10,23 @@ export class EmpleadoService {
 	constructor(private prisma: PrismaService) {}
 	
 	async getEmpleados() {
-		return this.prisma.empleado.findMany();
+		return this.prisma.empleado.findMany({
+			include: {
+				Departamento: true,
+				Rol: true,
+				Horario: {
+					include: {
+						Dia: true,
+					}
+				}
+			},
+			where: {
+				fecha_eliminacion: null,
+			},
+			omit: {
+				contrasena: true,
+			}
+		});
 	}
 
 	async login(empleadoData: LoginEmpleadoDto, response: Response) {
