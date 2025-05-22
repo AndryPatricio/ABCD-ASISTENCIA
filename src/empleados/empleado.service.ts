@@ -33,12 +33,19 @@ export class EmpleadoService {
 		const empleado = await this.prisma.empleado.findFirst({
 			where: {
 				id_empleado: empleadoData.numeroEmpleado,
-				contrasena: empleadoData.contrasena,
 				AND: {
 					fecha_eliminacion: null,
 				}
 			},
 		});
+
+		const comparePassword = await bcrypt.compare(empleadoData.contrasena, empleado?.contrasena || '');
+
+		if(!comparePassword) {
+			return response.status(401).json({
+				message: 'Error de autenticación. Usuario o contraseña incorrectos.',
+			});
+		}
 		
 		if (empleado === null) {
 			return response.status(401).json({
