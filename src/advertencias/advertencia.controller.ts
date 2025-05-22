@@ -1,6 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { AdvertenciaService } from './advertencia.service';
-import { AdvertenciaDto } from './dto/advertencias.dto';
+import { AdvertenciaDto, CrearAdvertenciaDto } from './dto/advertencias.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('advertencias')
@@ -13,5 +13,13 @@ export class AdvertenciaController {
     @ApiResponse({ status: 500, description: 'Error al obtener la lista de advertencias.' })
     getAdvertenciasByEmpleado(@Query() empleadoData: AdvertenciaDto) {
         return this.advertenciasService.getAdvertenciasByEmpleado(empleadoData);
+    }
+
+    @Post('crearAdvertencia')
+    @ApiOperation({ summary: 'Crea una nueva advertencia', description: 'Crea una nueva advertencia en la base de datos.' })
+    @ApiResponse({ status: 200, description: 'Advertencia creada exitosamente.' })
+    @ApiResponse({ status: 500, description: 'Error al crear la advertencia.' })
+    createAdvertencia(@Query() advertenciaData: CrearAdvertenciaDto) {
+        return this.advertenciasService.createAdvertencia(advertenciaData);
     }
 }
