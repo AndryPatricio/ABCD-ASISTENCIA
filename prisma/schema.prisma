@@ -11,6 +11,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
@@ -35,6 +36,7 @@ model Departamento {
   nombre          String
   descripcion     String?
   fecha_registro  DateTime    @default(now())
+  fecha_eliminacion DateTime?
   Empleado        Empleado[]
 }
 
