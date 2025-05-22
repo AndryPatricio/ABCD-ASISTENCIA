@@ -616,7 +616,7 @@ export class AsistenciaService {
                         id_empleado: true,
                         nombre: true,
                         Departamento: {
-                            select: { id_departamento: true, nombre: true }
+                            select: { id_departamento: true, nombre: true, descripcion: true }
                         },
                         Rol: {
                             select: { id_rol: true, nombre: true }
@@ -645,7 +645,8 @@ export class AsistenciaService {
             // Ensure departamento includes descripcion and fecha_registro
             const departamento = {
                 idDepartamento: turno.Empleado.Departamento.id_departamento,
-                nombre: turno.Empleado.Departamento.nombre
+                nombre: turno.Empleado.Departamento.nombre,
+                descripcion: turno.Empleado.Departamento.descripcion ?? '',
             };
 
             return {

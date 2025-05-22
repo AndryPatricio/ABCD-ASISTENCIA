@@ -6,4 +6,7 @@ export class DepartamentoDto {
     
     @ApiProperty({  description: 'Nombre del departamento', example: 'Recursos Humanos' })
     nombre: string
+
+    @ApiProperty({ description: 'Descripción del departamento', example: "Departamento de recursos humanos" })
+    descripcion: string;
  }

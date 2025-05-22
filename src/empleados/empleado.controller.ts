@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Res } from '@nestjs/common';
 import { EmpleadoService } from './empleado.service';
 import { ActualizarEmpleadoDto, EliminarEmpleadoDto, EmpleadoDto, LoginEmpleadoDto } from './dto/empleados.dto';
 // import { LoginResponseDto } from 'src/responses/response.dto';
@@ -47,7 +47,7 @@ export class EmpleadoController {
 		return this.empleadosService.updateEmpleado(empleadoData, response);
 	}
 
-	@Post('/deleteEmpleado')
+	@Delete('/deleteEmpleado')
 	@ApiOperation({ summary: 'Elimina un empleado', description: 'Elimina un empleado de la base de datos.' })
 	@ApiResponse({ status: 200, description: 'Empleado eliminado exitosamente.', type: EliminarEmpleadoDto })
 	@ApiResponse({ status: 400, description: 'Error al eliminar el empleado. Datos inválidos.', schema: { example: { message: 'Error al eliminar el empleado. Datos inválidos.' } } })
