@@ -10,6 +10,14 @@ import { LoginResponseDto } from 'src/responses/response.dto';
 export class EmpleadoController {
 	constructor(private readonly empleadosService: EmpleadoService) {}
 
+	@Get('/siguienteId')
+	@ApiOperation({ summary: 'Obtiene el siguiente ID de empleado', description: 'Obtiene el siguiente ID de empleado disponible en la base de datos.' })
+	@ApiResponse({ status: 200, description: 'Siguiente ID de empleado obtenido exitosamente.' })
+	@ApiResponse({ status: 500, description: 'Error al obtener el siguiente ID de empleado.' })
+	getSiguienteId() {
+		return this.empleadosService.getSiguienteId();
+	}
+
 	@Get()
 	@ApiOperation({ summary: 'Obtiene todos los empleados', description: 'Obtiene todos los empleados de la base de datos.' })
 	@ApiResponse({ status: 200, description: 'Lista de empleados obtenida exitosamente.' })

@@ -8,6 +8,21 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class EmpleadoService {
 	constructor(private prisma: PrismaService) {}
+
+	async getSiguienteId() {
+		const empleado = await this.prisma.empleado.findFirst({
+			orderBy: {
+				id_empleado: 'desc',
+			},
+			take: 1,
+		});
+
+		if (empleado) {
+			return empleado.id_empleado + 1;
+		} else {
+			return 1;
+		}
+	}
 	
 	async getEmpleados() {
 		return this.prisma.empleado.findMany({
