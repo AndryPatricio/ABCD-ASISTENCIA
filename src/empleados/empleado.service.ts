@@ -204,15 +204,15 @@ export class EmpleadoService {
 
 		const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
 
-		empleado.Horario.forEach(async (horario, index) => {
+		empleado.Horario.forEach(async (horario) => {
 			await this.prisma.horario.update({
 				where: {
 					id_horario: horario.id_horario,
 				},
 				data: {
-					laborable: empleadoData.diasLaborales[dias[index]].laborable,
-					hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[index]].hora_entrada),
-					hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[index]].hora_salida),
+					laborable: empleadoData.diasLaborales[dias[horario.id_horario -1]].laborable,
+					hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[horario.id_horario -1]].hora_entrada),
+					hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[horario.id_horario -1]].hora_salida),
 				}
 			})
 		})
