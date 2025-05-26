@@ -210,9 +210,9 @@ export class EmpleadoService {
 					id_horario: horario.id_horario,
 				},
 				data: {
-					laborable: empleadoData.diasLaborales[dias[horario.id_horario -1]].laborable,
-					hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[horario.id_horario -1]].hora_entrada),
-					hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[horario.id_horario -1]].hora_salida),
+					laborable: empleadoData.diasLaborales[dias[horario.id_dia -1]].laborable,
+					hora_entrada_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[horario.id_dia -1]].hora_entrada),
+					hora_salida_estandar: this.obtenerHoras(empleadoData.diasLaborales[dias[horario.id_dia -1]].hora_salida),
 				}
 			})
 		})
